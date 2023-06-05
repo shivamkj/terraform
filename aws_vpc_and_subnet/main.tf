@@ -1,17 +1,27 @@
+####    VARIABLES    ####
+
 variable "region" {
   description = "Region for the AWS Project to use for deployment"
   default     = "ap-south-1"
 }
+
 # variable "aws_access_key" {
 #   type      = string
 #   sensitive = true
 # }
+
 # variable "aws_secret_key" {
 #   type      = string
 #   sensitive = true
 # }
-variable "aws_profile" { type = string }
-variable "aws_availability_zone" { type = string }
+
+variable "aws_profile" {
+  type = string
+}
+
+variable "aws_availability_zone" {
+  type = string
+}
 
 variable "cidr_blocks" {
   type = list(object({
@@ -26,6 +36,8 @@ provider "aws" {
   # access_key = var.aws_access_key
   # secret_key = var.aws_secret_key
 }
+
+####    RESOURCES    ####
 
 resource "aws_vpc" "custom-vpc" {
   cidr_block = var.cidr_blocks[0].cidr_block
@@ -56,6 +68,7 @@ resource "aws_subnet" "custom-subnet-2" {
   }
 }
 
+####    OUTPUTS    ###
 
 output "custom-vpc-id" {
   value = aws_vpc.custom-vpc.id
