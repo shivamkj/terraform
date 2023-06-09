@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.0"
+    }
   }
 
   # backend "s3" {
@@ -21,6 +25,9 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
+provider "cloudflare" {
+  api_token = var.cloudflare_token
+}
 
 module "ec2_production_application" {
   source = "./module"
@@ -29,6 +36,10 @@ module "ec2_production_application" {
   environment = "dev"
 }
 
-output "lb_address" {
-  value = module.ec2_production_application.application_lb_addr
+# Add a record to the domain
+resource "cloudflare_record" "dev_sub_domain_record" {
+  zone_id = var.cloudflare_zone_id
+  name    = "dev-app"
+  value   = module.ec2_production_application.application_lb_addr
+  type    = "CNAME"
 }
