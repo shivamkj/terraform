@@ -34,12 +34,30 @@ module "ec2_production_application" {
 
   app_name    = "terraform-app"
   environment = "dev"
+  domain_name = "dev-app.shivamjha.com"
 }
 
-# Add a record to the domain
 resource "cloudflare_record" "dev_sub_domain_record" {
   zone_id = var.cloudflare_zone_id
   name    = "dev-app"
   value   = module.ec2_production_application.application_lb_addr
   type    = "CNAME"
+}
+
+### Cert Validation for issuing SSL for AWS LB
+resource "cloudflare_record" "cf_record" {
+  for_each = {
+    for item in module.ec2_production_application.cert_dns_validation : item.domain_name => {
+      name   = item.resource_record_name
+      record = item.resource_record_value
+      type   = item.resource_record_type
+    }
+  }
+
+  zone_id         = var.cloudflare_zone_id
+  allow_overwrite = true
+  name            = each.value.name
+  type            = each.value.type
+  value           = each.value.record
+  ttl             = 1
 }

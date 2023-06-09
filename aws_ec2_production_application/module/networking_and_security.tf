@@ -1,19 +1,3 @@
-# resource "aws_vpc" "custom_vpc" {
-#   cidr_block = var.cidr_blocks[0].cidr_block
-#   tags = {
-#     Name : "custom-vpc"
-#   }
-# }
-
-# resource "aws_subnet" "custom_subnet_1" {
-#   vpc_id            = aws_vpc.custom_vpc.id
-#   cidr_block        = var.cidr_blocks[1].cidr_block
-#   availability_zone = var.aws_availability_zone
-#   tags = {
-#     Name : "custom-subnet-1"
-#   }
-# }
-
 ### Default VPC & Subnets ID
 data "aws_vpc" "default_vpc" {
   default = true
@@ -25,7 +9,6 @@ data "aws_subnets" "default_subnets" {
     values = [data.aws_vpc.default_vpc.id]
   }
 }
-
 
 ### EC2 Instances Security Group
 resource "aws_security_group" "ec2_security_group" {

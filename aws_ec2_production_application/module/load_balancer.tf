@@ -3,6 +3,12 @@ resource "aws_lb" "load_balancer" {
   load_balancer_type = "application"
   subnets            = data.aws_subnets.default_subnets.ids
   security_groups    = [aws_security_group.lb_security_group.id]
+
+  # access_logs {
+  #   bucket  = aws_s3_bucket.storage.id
+  #   prefix  = "lb-logs"
+  #   enabled = true
+  # }
 }
 
 resource "aws_lb_target_group" "lb_ec2_instances" {
@@ -25,40 +31,49 @@ resource "aws_lb_target_group" "lb_ec2_instances" {
 resource "aws_lb_target_group_attachment" "target_group_instances" {
   for_each = local.instances
 
-
   target_group_arn = aws_lb_target_group.lb_ec2_instances.arn
   target_id        = aws_instance.ec2_instances[each.key].id
   port             = 3000
 }
 
-resource "aws_lb_listener" "http_listener" {
+resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.load_balancer.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.cert.arn
 
-  # By default, return a simple 404 page
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/html"
-      message_body = "<h1>404: page not found</h1>"
-      status_code  = 404
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.lb_ec2_instances.arn
   }
 }
 
-resource "aws_lb_listener_rule" "ec2_listener_rule" {
-  listener_arn = aws_lb_listener.http_listener.arn
-  priority     = 100
+# resource "aws_lb_listener_rule" "ec2_listener_rule" {
+#   listener_arn = aws_lb_listener.https_listener.arn
+#   priority     = 100
 
-  condition {
-    path_pattern {
-      values = ["*"]
-    }
+#   condition {
+#     path_pattern {
+#       values = ["*"]
+#     }
+#   }
+
+#   action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.lb_ec2_instances.arn
+#   }
+# }
+
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  tags = {
+    Name = "${var.app_name}-${var.environment}-cert"
   }
 
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.lb_ec2_instances.arn
+  lifecycle {
+    create_before_destroy = true
   }
 }

@@ -9,7 +9,6 @@ locals {
   }
 }
 
-
 resource "aws_instance" "ec2_instances" {
   for_each = local.instances
 
@@ -22,7 +21,6 @@ resource "aws_instance" "ec2_instances" {
               echo "<h1>Hello, World ${each.key}</h1>" > index.html
               python3 -m http.server 3000 &
               EOF
-  # associate_public_ip_address = false
 
   tags = {
     Name = "${var.app_name}-${var.environment}-instance-${each.key}"
