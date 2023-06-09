@@ -1,5 +1,3 @@
-
-
 locals {
   instances = {
     0 : {
