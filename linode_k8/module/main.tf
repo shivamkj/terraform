@@ -61,17 +61,17 @@ resource "helm_release" "cert-m" {
   }
 }
 
-# resource "helm_release" "keda" {
-#   depends_on = [local_file.kubeconfig]
-#   name       = "keda-core"
-#   repository = "https://kedacore.github.io/charts"
-#   chart      = "keda"
-# }
+resource "helm_release" "keda" {
+  depends_on = [local_file.kubeconfig]
+  name       = "keda-core"
+  repository = "https://kedacore.github.io/charts"
+  chart      = "keda"
+}
 
 
-# resource "helm_release" "keda-add" {
-#   depends_on = [local_file.kubeconfig]
-#   name       = "keda-http-add-on"
-#   repository = "https://kedacore.github.io/charts"
-#   chart      = "keda-add-ons-http"
-# }
+resource "helm_release" "keda-add" {
+  depends_on = [local_file.kubeconfig, helm_release.keda]
+  name       = "keda-http-add-on"
+  repository = "https://kedacore.github.io/charts"
+  chart      = "keda-add-ons-http"
+}
