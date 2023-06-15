@@ -22,7 +22,7 @@ resource "local_file" "kubeconfig" {
 
 module "helm_installation" {
   source     = "../../helm_module"
-  depends_on = [linode_lke_cluster.k8_cluster]
+  depends_on = [linode_lke_cluster.k8_cluster, local_file.kubeconfig]
 
   ingress_name     = "nginx-community"
   cert_manager     = true
