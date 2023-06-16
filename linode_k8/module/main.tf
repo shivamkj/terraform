@@ -24,8 +24,8 @@ module "helm_installation" {
   source     = "../../helm_module"
   depends_on = [linode_lke_cluster.k8_cluster, local_file.kubeconfig]
 
-  ingress_name     = "nginx-community"
+  nginx_ingress    = true
   cert_manager     = true
-  keda_auto_scaler = true
+  keda_auto_scaler = false
 }
 

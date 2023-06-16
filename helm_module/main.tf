@@ -1,6 +1,6 @@
 ## https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
 resource "helm_release" "ingress-nginx" {
-  count      = var.ingress_name == "nginx-community" ? 1 : 0
+  count      = var.nginx_ingress ? 1 : 0
   name       = "ingress"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
