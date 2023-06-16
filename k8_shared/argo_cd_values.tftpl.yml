@@ -1,7 +1,11 @@
 ### Full Config: https://raw.githubusercontent.com/argoproj/argo-helm/main/charts/argo-cd/values.yaml
 
 crds:
-  keep: false # Remove CRDs on chart uninstall
+  keep: false # Remove CRDs on chart
+
+global:
+  image:
+    tag: "v2.6.10"
 
 configs:
   # General Argo CD configuration

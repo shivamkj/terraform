@@ -7,10 +7,10 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   version          = "5.36.1"
   create_namespace = true
-  depends_on       = [local_file.kubeconfig]
+  depends_on       = [local_sensitive_file.kubeconfig]
 
   values = [
-    templatefile("${path.module}/argo_cd_values.tftpl", {
+    templatefile("${path.module}/argo_cd_values.tftpl.yml", {
       argocd_url           = var.k8_config.argo_cd_url
       github_org_name      = var.k8_config.github_org_name
       github_client_id     = var.k8_config.github_client_id
@@ -26,7 +26,7 @@ resource "helm_release" "ingress-nginx" {
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   version    = "4.7.0"
-  depends_on = [local_file.kubeconfig]
+  depends_on = [local_sensitive_file.kubeconfig]
 }
 
 ## https://artifacthub.io/packages/helm/cert-manager/cert-manager
@@ -36,7 +36,7 @@ resource "helm_release" "cert-m" {
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
   version    = "v1.12.1"
-  depends_on = [local_file.kubeconfig]
+  depends_on = [local_sensitive_file.kubeconfig]
 
   set {
     name  = "installCRDs"
@@ -51,7 +51,7 @@ resource "helm_release" "keda" {
   repository = "https://kedacore.github.io/charts"
   chart      = "keda"
   version    = "2.10.2"
-  depends_on = [local_file.kubeconfig]
+  depends_on = [local_sensitive_file.kubeconfig]
 }
 
 ## https://artifacthub.io/packages/keda-scaler/keda-official-external-scalers/keda-add-ons-http
@@ -61,5 +61,5 @@ resource "helm_release" "keda-add-on-http" {
   repository = "https://kedacore.github.io/charts"
   chart      = "keda-add-ons-http"
   version    = "0.4.1"
-  depends_on = [helm_release.keda, local_file.kubeconfig]
+  depends_on = [helm_release.keda, local_sensitive_file.kubeconfig]
 }
