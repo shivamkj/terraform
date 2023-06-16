@@ -1,23 +1,16 @@
-# ===================== DO CONFIG VARS =======================
 variable "do_access_token" {
   type      = string
   sensitive = true
 }
 
-# ===================== DOKS CONFIG VARS =======================
-
-variable "k8_cluster_name" {
-  type = string
+variable "do_region" {
+  type    = string
+  default = "blr1"
 }
 
 variable "k8_version" {
   type    = string
   default = "1.27.2-do.0"
-}
-
-variable "doks_cluster_region" {
-  type    = string
-  default = "blr1"
 }
 
 variable "doks_node_pool" {
@@ -32,7 +25,4 @@ variable "doks_node_pool" {
   description = "DOKS cluster default node pool configuration"
 }
 
-variable "env_name" {
-  description = "The environment for the LKE cluster"
-  default     = "dev"
-}
+variable "k8_config" { sensitive = true }

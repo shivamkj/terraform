@@ -3,10 +3,10 @@ variable "do_access_token" {
   sensitive = true
 }
 
+variable "k8_config" { sensitive = true }
+
 module "do_k8_cluster" {
   source          = "./module"
-  k8_cluster_name = "test"
-  # env_name = "dev"
   do_access_token = var.do_access_token
+  k8_config       = var.k8_config
 }
-

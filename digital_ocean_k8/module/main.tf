@@ -1,6 +1,27 @@
+terraform {
+  required_version = ">= 1.4.6"
+
+  required_providers {
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
+      version = "2.28.1"
+    }
+  }
+}
+
+provider "digitalocean" {
+  token = var.do_access_token
+}
+
+provider "helm" {
+  kubernetes {
+    config_path = module.k8_shared.kube_config_path
+  }
+}
+
 resource "digitalocean_kubernetes_cluster" "k8_cluster" {
-  name    = "${var.k8_cluster_name}-${var.env_name}"
-  region  = var.doks_cluster_region
+  name    = "${var.k8_config.project_name}-${var.k8_config.env}"
+  region  = var.do_region
   version = var.k8_version
 
   node_pool {
@@ -12,19 +33,11 @@ resource "digitalocean_kubernetes_cluster" "k8_cluster" {
   }
 }
 
-locals {
-  kube_config_path = "kube-config-${var.env_name}"
-}
-
-resource "local_file" "kubeconfig" {
-  filename   = local.kube_config_path
-  content    = digitalocean_kubernetes_cluster.k8_cluster.kube_config[0].raw_config
-  depends_on = [digitalocean_kubernetes_cluster.k8_cluster]
-}
-
-module "helm_installation" {
-  source     = "../../helm_module"
-  depends_on = [digitalocean_kubernetes_cluster.k8_cluster, local_file.kubeconfig]
+module "k8_shared" {
+  source              = "../../k8_shared"
+  kube_config_content = digitalocean_kubernetes_cluster.k8_cluster.kube_config[0].raw_config
+  depends_on          = [digitalocean_kubernetes_cluster.k8_cluster]
+  k8_config           = var.k8_config
 
   argo_cd = true
 }

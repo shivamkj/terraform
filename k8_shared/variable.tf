@@ -1,3 +1,8 @@
+variable "kube_config_content" {
+  type      = string
+  sensitive = true
+}
+
 variable "argo_cd" {
   type        = bool
   description = "Installs Argo CD in K8 cluster"
@@ -22,3 +27,20 @@ variable "keda_auto_scaler" {
   default     = false
 }
 
+# ===================== K8 Module Configuration =======================
+
+variable "k8_config" {
+  type = object({
+    ## General Config
+    env          = string
+    project_name = string
+
+    ## Argo CD Configuration
+    github_client_id     = string
+    github_client_secret = string
+    github_org_name      = string
+    argo_cd_url          = string
+  })
+
+  sensitive = true
+}
