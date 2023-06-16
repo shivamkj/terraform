@@ -1,3 +1,9 @@
+variable "argo_cd" {
+  type        = bool
+  description = "Installs Argo CD in K8 cluster"
+  default     = false
+}
+
 variable "nginx_ingress" {
   type        = bool
   description = "Installs community edition built nginx ingress for Kubernetes"

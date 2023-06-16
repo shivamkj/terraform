@@ -1,3 +1,17 @@
+resource "helm_release" "argocd" {
+  count            = var.argo_cd ? 1 : 0
+  name             = "argocd"
+  namespace        = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  version          = "5.36.1"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/argo_cd_values.yml")
+  ]
+}
+
 ## https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
 resource "helm_release" "ingress-nginx" {
   count      = var.nginx_ingress ? 1 : 0
