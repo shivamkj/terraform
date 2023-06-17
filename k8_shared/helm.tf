@@ -10,11 +10,13 @@ resource "helm_release" "argocd" {
   depends_on       = [local_sensitive_file.kubeconfig]
 
   values = [
-    templatefile("${path.module}/argo_cd_values.tftpl.yml", {
+    templatefile("${path.module}/config/argo_cd_values.tftpl.yml", {
       argocd_url           = var.k8_config.argo_cd_url
       github_org_name      = var.k8_config.github_org_name
       github_client_id     = var.k8_config.github_client_id
       github_client_secret = sensitive(var.k8_config.github_client_secret)
+      github_repo_url      = var.k8_config.github_repo_url
+      github_ssh_key       = sensitive(var.k8_config.github_ssh_key)
     })
   ]
 }

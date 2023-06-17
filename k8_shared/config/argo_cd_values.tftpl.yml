@@ -1,0 +1,81 @@
+### Full Config: https://raw.githubusercontent.com/argoproj/argo-helm/main/charts/argo-cd/values.yaml
+
+crds:
+  keep: false # Remove CRDs on chart uninstall
+
+global:
+  image:
+    tag: "v2.6.10" # Overrides the global Argo CD image tag whose default is the chart appVersion
+
+  logging:
+    level: warn # Set the global logging level. One of: `debug`, `info`, `warn` or `error`
+
+  # -- Deployment strategy for the all deployed Deployments
+  deploymentStrategy:
+    {}
+    # type: RollingUpdate
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+
+configs:
+  # General Argo CD configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  cm:
+    create: true # Create the argocd-cm configmap for [declarative setup]
+
+    url: "${argocd_url}" # Argo CD's externally facing base URL (optional). Required when configuring SSO
+
+    # Dex configuration
+    dex.config: |
+      connectors:
+        # GitHub example
+        - type: github
+          id: github
+          name: GitHub
+          config:
+            clientID: "${github_client_id}"
+            clientSecret: "${github_client_secret}"
+            orgs:
+              - name: "${github_org_name}"
+        # - type: oidc
+        #   id: google
+        #   name: Google
+        #   config:
+        #       issuer: https://accounts.google.com
+        #       clientID: "YOUR_CLIENT_ID"
+        #       clientSecret: "YOUR_CLIENT_SECRET"
+
+  credentialTemplates:
+    ssh-creds:
+      url: "${github_repo_url}"
+      sshPrivateKey: |
+        {$github_ssh_key}
+
+  repositories:
+    k8-repo:
+      url: "${github_repo_url}"
+
+  params:
+    ## Server properties
+    server.insecure: true # Run server without TLS
+
+applicationSet:
+  enabled: false
+# redis:
+#   enabled: false
+# External Redis parameters
+# externalRedis:
+#   # -- External Redis server host
+#   host: ""
+#   # -- External Redis username
+#   username: ""
+#   # -- External Redis password
+#   password: ""
+#   # -- External Redis server port
+#   port: 6379
+#   # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
+#   # When it's set, the `externalRedis.password` parameter is ignored
+#   existingSecret: ""
+#   # External Redis Secret annotations
+#   secretAnnotations: {}

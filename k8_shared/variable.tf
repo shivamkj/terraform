@@ -40,6 +40,8 @@ variable "k8_config" {
     github_client_secret = string
     github_org_name      = string
     argo_cd_url          = string
+    github_repo_url      = string
+    github_ssh_key       = string
   })
 
   sensitive = true
