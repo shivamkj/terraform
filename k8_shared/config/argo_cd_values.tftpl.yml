@@ -24,6 +24,8 @@ configs:
   cm:
     create: true # Create the argocd-cm configmap for [declarative setup]
 
+    admin.enabled: false
+
     url: "${argocd_url}" # Argo CD's externally facing base URL (optional). Required when configuring SSO
 
     # Dex configuration
@@ -55,6 +57,14 @@ configs:
   repositories:
     k8-repo:
       url: "${github_repo_url}"
+
+  # # Argo CD sensitive data
+  # # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
+  # secret:
+  #   # -- Create the argocd-secret
+  #   createSecret: true
+  #   # -- Shared secret for authenticating GitHub webhook events
+  #   githubSecret: ""
 
   params:
     ## Server properties
