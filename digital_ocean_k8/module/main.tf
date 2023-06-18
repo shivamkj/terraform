@@ -19,6 +19,10 @@ provider "helm" {
   }
 }
 
+provider "kubernetes" {
+  config_path = module.k8_shared.kube_config_path
+}
+
 resource "digitalocean_kubernetes_cluster" "k8_cluster" {
   name    = "${var.k8_config.project_name}-${var.k8_config.env}"
   region  = var.do_region
