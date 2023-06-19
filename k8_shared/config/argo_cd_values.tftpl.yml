@@ -53,9 +53,11 @@ configs:
 
   credentialTemplates:
     ssh-creds:
+      name: git-repo
+      type: git
       url: "${github_repo_url}"
       sshPrivateKey: |
-        {$github_ssh_key}
+        ${github_ssh_key}
 
   repositories:
     k8-repo:
