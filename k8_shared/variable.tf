@@ -36,12 +36,13 @@ variable "k8_config" {
     project_name = string
 
     ## Argo CD Configuration
-    github_client_id     = string
-    github_client_secret = string
-    github_org_name      = string
-    argo_cd_url          = string
-    github_repo_url      = string
-    github_ssh_key       = string
+    github_client_id      = string
+    github_client_secret  = string
+    github_org_name       = string
+    argo_cd_url           = string
+    github_repo_url       = string
+    github_ssh_key        = string
+    github_webhook_secret = string
   })
 
   sensitive = true

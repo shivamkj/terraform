@@ -11,12 +11,13 @@ resource "helm_release" "argocd" {
 
   values = [
     templatefile("${path.module}/config/argo_cd_values.tftpl.yml", {
-      argocd_url           = var.k8_config.argo_cd_url
-      github_org_name      = var.k8_config.github_org_name
-      github_client_id     = var.k8_config.github_client_id
-      github_client_secret = sensitive(var.k8_config.github_client_secret)
-      github_repo_url      = var.k8_config.github_repo_url
-      github_ssh_key       = sensitive(var.k8_config.github_ssh_key)
+      argocd_url            = var.k8_config.argo_cd_url
+      github_org_name       = var.k8_config.github_org_name
+      github_client_id      = var.k8_config.github_client_id
+      github_client_secret  = sensitive(var.k8_config.github_client_secret)
+      github_repo_url       = var.k8_config.github_repo_url
+      github_ssh_key        = sensitive(var.k8_config.github_ssh_key)
+      github_webhook_secret = sensitive(var.k8_config.github_webhook_secret)
     })
   ]
 }

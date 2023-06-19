@@ -10,7 +10,7 @@ global:
   logging:
     level: warn # Set the global logging level. One of: `debug`, `info`, `warn` or `error`
 
-  # -- Deployment strategy for the all deployed Deployments
+  # Deployment strategy for the all deployed Deployments
   deploymentStrategy:
     {}
     # type: RollingUpdate
@@ -25,6 +25,9 @@ configs:
     create: true # Create the argocd-cm configmap for [declarative setup]
 
     admin.enabled: false
+
+    # Timeout to discover if a new manifests version got published to the repository
+    timeout.reconciliation: 86400s # Increased to 1 Day, somewhat disabled, as it works with webhook
 
     url: "${argocd_url}" # Argo CD's externally facing base URL (optional). Required when configuring SSO
 
@@ -58,17 +61,21 @@ configs:
     k8-repo:
       url: "${github_repo_url}"
 
-  # # Argo CD sensitive data
-  # # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
-  # secret:
-  #   # -- Create the argocd-secret
-  #   createSecret: true
-  #   # -- Shared secret for authenticating GitHub webhook events
-  #   githubSecret: ""
+  # Argo CD sensitive data
+  # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
+  secret:
+    createSecret: true
+    githubSecret: "${github_webhook_secret}" # Shared secret for authenticating GitHub webhook events
 
   params:
     ## Server properties
     server.insecure: true # Run server without TLS
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    create: true
+    policy.default: "role:readonly"
 
 applicationSet:
   enabled: false
