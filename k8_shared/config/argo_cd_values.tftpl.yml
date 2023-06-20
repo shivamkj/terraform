@@ -24,7 +24,7 @@ configs:
   cm:
     create: true # Create the argocd-cm configmap for [declarative setup]
 
-    admin.enabled: false
+    admin.enabled: true
 
     # Timeout to discover if a new manifests version got published to the repository
     timeout.reconciliation: 86400s # Increased to 1 Day, somewhat disabled, as it works with webhook
@@ -81,20 +81,11 @@ configs:
 
 applicationSet:
   enabled: false
-# redis:
-#   enabled: false
+
+redis:
+  enabled: false
+
 # External Redis parameters
-# externalRedis:
-#   # -- External Redis server host
-#   host: ""
-#   # -- External Redis username
-#   username: ""
-#   # -- External Redis password
-#   password: ""
-#   # -- External Redis server port
-#   port: 6379
-#   # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
-#   # When it's set, the `externalRedis.password` parameter is ignored
-#   existingSecret: ""
-#   # External Redis Secret annotations
-#   secretAnnotations: {}
+externalRedis:
+  host: "redis.shared"
+  port: 6379
