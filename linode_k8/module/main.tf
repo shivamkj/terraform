@@ -1,3 +1,24 @@
+terraform {
+  required_version = ">= 1.4.6"
+
+  required_providers {
+    linode = {
+      source  = "linode/linode"
+      version = "2.4.0"
+    }
+  }
+}
+
+provider "linode" {
+  token = var.linode_api_token
+}
+
+provider "helm" {
+  kubernetes {
+    config_path = module.k8_shared.kube_config_path
+  }
+}
+
 resource "linode_lke_cluster" "k8_cluster" {
   k8s_version = "1.26"
   label       = "shivam-k8-${var.env_name}"
@@ -10,22 +31,13 @@ resource "linode_lke_cluster" "k8_cluster" {
   }
 }
 
-locals {
-  kube_config_path = "kube-config-${var.env_name}"
+module "k8_shared" {
+  source              = "../../k8_shared"
+  kube_config_content = base64decode(linode_lke_cluster.k8_cluster.kubeconfig)
+  depends_on          = [linode_lke_cluster.k8_cluster]
+  k8_config           = var.k8_config
+
+  argo_cd = true
 }
 
-resource "local_file" "kubeconfig" {
-  filename   = local.kube_config_path
-  content    = base64decode(linode_lke_cluster.k8_cluster.kubeconfig)
-  depends_on = [linode_lke_cluster.k8_cluster]
-}
-
-module "helm_installation" {
-  source     = "../../helm_module"
-  depends_on = [linode_lke_cluster.k8_cluster, local_file.kubeconfig]
-
-  nginx_ingress    = true
-  cert_manager     = true
-  keda_auto_scaler = false
-}
 

@@ -7,3 +7,5 @@ variable "env_name" {
   description = "The environment for the LKE cluster"
   default     = "dev"
 }
+
+variable "k8_config" { sensitive = true }
