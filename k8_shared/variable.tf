@@ -29,7 +29,7 @@ variable "keda_auto_scaler" {
 
 # ===================== K8 Module Configuration =======================
 
-variable "k8_config" {
+variable "k8_shared_config" {
   type = object({
     ## General Config
     env          = string
@@ -46,4 +46,30 @@ variable "k8_config" {
   })
 
   sensitive = true
+}
+
+variable "k8_cluster_config" {
+  type = object({
+    region     = string
+    k8_version = string
+  })
+
+  default = {
+    region     = "blr1"
+    k8_version = "1.27.2-do.0"
+  }
+}
+
+variable "node_pool" {
+  type = object({
+    size      = string
+    max_nodes = number
+    min_nodes = number
+  })
+
+  default = {
+    size      = "s-2vcpu-4gb"
+    max_nodes = 3
+    min_nodes = 1
+  }
 }

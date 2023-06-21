@@ -8,4 +8,4 @@ variable "env_name" {
   default     = "dev"
 }
 
-variable "k8_config" { sensitive = true }
+variable "k8_shared_config" { sensitive = true }

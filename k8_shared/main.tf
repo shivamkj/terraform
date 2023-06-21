@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  kube_config_path = "kube-config-${var.k8_config.env}"
+  kube_config_path = "kube-config-${var.k8_shared_config.env}"
 }
 
 resource "local_sensitive_file" "kubeconfig" {

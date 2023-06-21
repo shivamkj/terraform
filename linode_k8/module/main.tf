@@ -35,7 +35,7 @@ module "k8_shared" {
   source              = "../../k8_shared"
   kube_config_content = base64decode(linode_lke_cluster.k8_cluster.kubeconfig)
   depends_on          = [linode_lke_cluster.k8_cluster]
-  k8_config           = var.k8_config
+  k8_shared_config           = var.k8_shared_config
 
   argo_cd = true
 }
