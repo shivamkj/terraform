@@ -5,7 +5,7 @@ resource "helm_release" "argocd" {
   namespace        = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
-  version          = "5.36.1"
+  version          = "5.36.6"
   create_namespace = true
   depends_on       = [local_sensitive_file.kubeconfig]
 
