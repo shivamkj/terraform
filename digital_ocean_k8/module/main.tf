@@ -22,7 +22,6 @@ variable "do_config" {
   type = object({
     access_token = string
   })
-
   sensitive = true
 }
 
@@ -45,10 +44,10 @@ resource "digitalocean_kubernetes_cluster" "k8_cluster" {
 }
 
 module "k8_shared" {
-  source              = "../../k8_shared"
   kube_config_content = digitalocean_kubernetes_cluster.k8_cluster.kube_config[0].raw_config
   depends_on          = [digitalocean_kubernetes_cluster.k8_cluster]
-  k8_shared_config    = var.k8_shared_config
 
-  argo_cd = true
+  source           = "../../k8_shared"
+  k8_shared_config = var.k8_shared_config
+  argo_cd          = true
 }

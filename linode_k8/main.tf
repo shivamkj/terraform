@@ -1,14 +1,14 @@
-variable "linode_api_token" {
-  type      = string
-  sensitive = true
-}
-
+variable "linode_config" { sensitive = true }
 variable "k8_shared_config" { sensitive = true }
+variable "k8_cluster_config" { sensitive = true }
+variable "node_pool" {}
 
 module "linode_k8_cluster" {
-  source           = "./module"
-  env_name         = "dev"
-  linode_api_token = var.linode_api_token
-  k8_shared_config        = var.k8_shared_config
+  linode_config = var.linode_config
+
+  source            = "./module"
+  k8_shared_config  = var.k8_shared_config
+  k8_cluster_config = var.k8_cluster_config
+  node_pool         = var.node_pool
 }
 
