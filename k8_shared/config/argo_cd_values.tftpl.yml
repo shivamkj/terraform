@@ -57,7 +57,7 @@ configs:
       type: git
       url: "${github_repo_url}"
       sshPrivateKey: |
-        ${github_ssh_key}
+        ${indent(8, github_ssh_key)}
 
   repositories:
     k8-repo:
