@@ -24,6 +24,12 @@ terraform {
   }
 }
 
+provider "helm" {
+  kubernetes {
+    config_path = module.k8_shared.kube_config_path
+  }
+}
+
 module "k8_shared" {
   source              = "./shared"
   kube_config_content = local.is_vultr ? base64decode(vultr_kubernetes.k8_cluster[0].kube_config) : (local.is_scaleway ? scaleway_k8s_cluster.k8_cluster[0].kubeconfig[0].config_file : (local.is_linode ? base64decode(linode_lke_cluster.k8_cluster[0].kubeconfig) : local.is_digital_ocean ? digitalocean_kubernetes_cluster.k8_cluster[0].kube_config[0].raw_config : null))

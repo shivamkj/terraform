@@ -20,21 +20,21 @@ variable "k8_shared_config" { sensitive = true }
 #   }
 # }
 
-# module "linode_k8_cluster" {
-#   source           = "./module"
-#   cloud_provider   = "linode"
-#   linode_config    = var.linode_config
-#   k8_shared_config = var.k8_shared_config
-#   node_pool = {
-#     size      = "g6-standard-1"
-#     max_nodes = 3
-#     min_nodes = 1
-#   }
-#   k8_cluster_config = {
-#     region     = "ap-west"
-#     k8_version = "1.26"
-#   }
-# }
+module "linode_k8_cluster" {
+  source           = "./module"
+  cloud_provider   = "linode"
+  linode_config    = var.linode_config
+  k8_shared_config = var.k8_shared_config
+  node_pool = {
+    size      = "g6-standard-1"
+    max_nodes = 3
+    min_nodes = 1
+  }
+  k8_cluster_config = {
+    region     = "ap-west"
+    k8_version = "1.26"
+  }
+}
 
 # module "vultr_k8_cluster" {
 #   source           = "./module"

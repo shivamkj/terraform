@@ -2,13 +2,6 @@ provider "vultr" {
   api_key = var.vultr_config.api_key
 }
 
-provider "helm" {
-  alias = "vultr"
-  kubernetes {
-    config_path = module.k8_shared_vultr[0].kube_config_path
-  }
-}
-
 variable "vultr_config" {
   type = object({
     api_key = string
