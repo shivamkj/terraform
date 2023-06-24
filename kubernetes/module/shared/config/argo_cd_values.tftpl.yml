@@ -11,12 +11,11 @@ global:
     level: warn # Set the global logging level. One of: `debug`, `info`, `warn` or `error`
 
   # Deployment strategy for the all deployed Deployments
-  deploymentStrategy:
-    {}
-    # type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 25%
-    #   maxUnavailable: 25%
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
 
 configs:
   # General Argo CD configuration
@@ -82,10 +81,10 @@ configs:
 applicationSet:
   enabled: false
 
-redis:
-  enabled: true
+# redis:
+# enabled: true
 
-# # External Redis parameters
-# externalRedis:
-#   host: "redis.shared"
-#   port: 6379
+# External Redis parameters
+externalRedis:
+  host: "redis.shared"
+  port: 6379
